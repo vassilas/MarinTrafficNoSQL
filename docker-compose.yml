@@ -1,0 +1,36 @@
+version: "2"
+services:
+    node-app:
+        build:
+            context: .
+            # target: vasikas/marine-nosql
+        image: vasikas/marine-nosql
+        ports:
+            - 49160:8080
+        networks:
+            - mongo-node-network
+        environment:
+            - DB_HOSTNAME=mongo-container
+        # start this AFTER mongo
+        depends_on:
+            - mongo
+    mongo:
+        image: mongo:latest
+        networks:
+            - mongo-node-network
+        ports:
+            - 27017:27017
+        container_name: mongo-container
+        command: --quiet
+        volumes:
+            - mongo-volume:/data/db
+        
+# connect both containers to this network
+networks:
+    mongo-node-network:
+        name: mongo-node-network
+
+# create named volume that all MongoDB interfaces share
+volumes:
+    mongo-volume:
+        name: mongo-volume       

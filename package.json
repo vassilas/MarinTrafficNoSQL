@@ -1,0 +1,16 @@
+{
+    "name": "marin_traffic_mongodb",
+    "version": "1.0.0",
+    "description": "Marin Traffic running with NoSQL database",
+    "author": "Konstantinos Vasilas <vasilas.cei@gmail.com>",
+    "main": "main.js",
+    "scripts": {
+        "start": "node main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "mongodb": "^4.1.4"
+    }
+}
+  
