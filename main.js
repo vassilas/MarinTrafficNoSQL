@@ -10,9 +10,19 @@ const HOST = '0.0.0.0';
 const app = express();
 
 // Connect to MongoDB
-mongo.mongoConnect().then(()=>console.log("Connected to MongoDB"));
-
-
+mongo.mongoConnect().then(()=>{
+    console.log("Connected to MongoDB")
+    return mongo.loadCSV()
+}).then(() => {
+    console.log("Data loaded to mongoDB")
+}).catch(error => {
+    console.error(error)
+}).then(()=>{
+    return mongo.readAllCollectionData()
+    console.log("Data read from mongoDB")
+}).then(()=>{
+    console.log("Data read from mongoDB")
+});
 
 app.use(express.static('public'));
 
