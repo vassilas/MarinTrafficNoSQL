@@ -14,6 +14,7 @@ docker run --rm -it -p 49160:8080 vasikas/marine-nosql
 ## build and run with docker compose
 ```bash
 docker-compose up -d
+docker-compose up --build
 ```
 
 ## Set Enviroment Variable

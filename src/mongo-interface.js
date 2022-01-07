@@ -75,34 +75,12 @@ console.log(url)
 
 async function loadCSV(csvName=csvFileName_anfr) {
 
-    const arrayToInsert = [];
-    const source = await converter.fromFile(csvName);
-
-    // Fetching the all data from each row
-    for (const i = 0; i < source.length; i++) {
-        console.debug(source[i]);
-        arrayToInsert.push(source[i]);
-    }
-
-    // this is the database
-    const database = mongoClient.db(dbName);
-    console.debug("Created/opened database " + dbName);
-
-    // this is the courses collection
-    const collectionName = 'anfr';
-    const anfrCollection = database.collection(collectionName);
-
-    return anfrCollection.insertMany(arrayToInsert);
-}
-
-async function loadCSV(csvName=csvFileName_anfr) {
-
     arrayToInsert = [];
     const source = await converter.fromFile(csvName);
     
     // Fetching the all data from each row
     for ( i = 0; i < source.length; i++) {
-        console.debug(source[i]);
+        //console.debug(source[i]);
         arrayToInsert.push(source[i]);
     }
 
@@ -122,6 +100,9 @@ async function loadCSV(csvName=csvFileName_anfr) {
 async function queryDatabase(query) {
     try {
 
+
+        // wait for MongoDB connection to disconnect
+        // await mongoClient.connect();
         const database = mongoClient.db(dbName);
         const collectionName = 'anfr';
         const anfrCollection = database.collection(collectionName);
@@ -131,8 +112,8 @@ async function queryDatabase(query) {
         console.log(e);
     } finally {
         // always close connection to mongo client afterwards
-        await mongoClient.close();
-        console.log("Disconnected from MongoDB")
+        // await mongoClient.close();
+        // console.log("Disconnected from MongoDB")
     }
 }
 
@@ -144,7 +125,7 @@ async function readAllCollectionData(query) {
     
     // get the return value from the mongoLoader using the mongoQuery object we just created and send it
     const returnValue = await queryDatabase(mongoQuery);
-    console.log(returnValue);
+    //console.log(returnValue);
 }
 
 
@@ -152,3 +133,4 @@ exports.mongoConnect = mongoConnect;
 exports.mongoDisconnect = mongoDisconnect;
 exports.loadCSV = loadCSV;
 exports.readAllCollectionData = readAllCollectionData;
+exports.queryDatabase = queryDatabase;

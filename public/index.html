@@ -3,6 +3,21 @@
 
     <head>
         <title>Marin-Traffic with MongoDB</title>
+
+
+        
+        <!-- BOOTSTRAP -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <!-- TABULATOR -->
+        <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_midnight.min.css" rel="stylesheet">
+        <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+
+        <!-- MY CSS -->
+        <link href="index.css" rel="stylesheet">
     </head>
 
 
@@ -10,6 +25,57 @@
 
     <h1>Description</h1>
     <p>Marin-Traffic with MongoDB</p>
+    <hr>
+
+    <h2>Search ANFR</h2>
+    <!--<form method="get" action="http://localhost:8080/api/">-->
+    <form>
+        <div>
+            <label class="input-label" for="maritime_area">maritime_area: </label>
+            <input type="text" id="maritime_area" name="maritime_area" value="NI"/>
+        </div>
+        <div>
+            <label class="input-label" for="registration_number">registration_number: </label>
+            <input type="text" id="registration_number" name="registration_number" />
+        </div>
+        <div>
+            <label class="input-label" for="imo_number">imo_number: </label>
+            <input type="text" id="imo_number" name="imo_number" />
+        </div>
+        <div>
+            <label class="input-label" for="ship_name">ship_name: </label>
+            <input type="text" id="ship_name" name="ship_name" />
+        </div>
+        <div>
+            <label class="input-label" for="mmsi">mmsi: </label>
+            <input type="text" id="mmsi" name="mmsi"/>
+        </div>
+        <div>
+            <label class="input-label" for="shiptype">shiptype: </label>
+            <input type="text" id="shiptype" name="shiptype" value="FISHING"/>
+        </div>
+        <div>
+    <!--<input type="submit" name="submit" value="Submit">-->
+            <input type="button" name="submit" value="Search" onclick="makeApiCall()">
+            <input type="reset" name="clear" value="Clear">
+        </div>
+    </form>
+
+    <br>
+    <hr>
+    <h2>Results ANFR</h2>
+    <!-- this will hold the result div -->
+    <div id="example-table"></div>
+    <br>
+    <hr>
+    <h2>Results ANFR - json raw data</h2>
+    <div id="result-div">
+
+    </div>
+
+
+
+    <script src="index.js"></script>
 
     </body>
 

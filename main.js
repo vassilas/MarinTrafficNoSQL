@@ -1,7 +1,8 @@
 const express = require('express');
 const mongo = require('./src/mongo-interface')
+const api = require('./src/api');
 
-console.log('start')
+
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -24,12 +25,15 @@ mongo.mongoConnect().then(()=>{
     console.log("Data read from mongoDB")
 });
 
+// get the API routing started
+app.use('/api', api);
+
+// use the public directory to serve static html files
 app.use(express.static('public'));
 
 app.get('/index.htm', function (req, res) {
     res.sendFile( __dirname + "/" + "index.htm" );
 })
-
 
 
 app.listen(PORT, HOST, () => {
