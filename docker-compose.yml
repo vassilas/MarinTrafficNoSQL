@@ -18,6 +18,8 @@ services:
         image: mongo:latest
         networks:
             - mongo-node-network
+        ports:
+            - 27017:27017
         container_name: mongo-container
         volumes:
             - mongo-volume:/data/db

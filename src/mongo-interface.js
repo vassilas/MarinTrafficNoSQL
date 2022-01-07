@@ -91,7 +91,7 @@ async function loadCSV(csvName=csvFileName_anfr) {
     // this is the courses collection
     const collectionName = 'anfr';
     const anfrCollection = database.collection(collectionName);
-    anfrCollection.remove();
+    anfrCollection.drop();
 
     return anfrCollection.insertMany(arrayToInsert);
 }

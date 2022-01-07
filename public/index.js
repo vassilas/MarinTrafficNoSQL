@@ -16,7 +16,7 @@ const date_first_license= "date_first_license"
 const date_inactivity_license ="date_inactivity_license"
 
 
-function makeApiCall() {
+function makeApiCall_ANFR() {
     
     const maritime_area_content = document.getElementById("maritime_area").value ;
     const registration_number_content = document.getElementById("registration_number").value ;

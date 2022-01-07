@@ -18,11 +18,6 @@ mongo.mongoConnect().then(()=>{
     console.log("Data loaded to mongoDB")
 }).catch(error => {
     console.error(error)
-}).then(()=>{
-    return mongo.readAllCollectionData()
-    console.log("Data read from mongoDB")
-}).then(()=>{
-    console.log("Data read from mongoDB")
 });
 
 // get the API routing started
