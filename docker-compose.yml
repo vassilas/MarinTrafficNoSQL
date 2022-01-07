@@ -6,7 +6,7 @@ services:
             # target: vasikas/marine-nosql
         image: vasikas/marine-nosql
         ports:
-            - 49160:8080
+            - 8080:8080
         networks:
             - mongo-node-network
         environment:
@@ -18,8 +18,6 @@ services:
         image: mongo:latest
         networks:
             - mongo-node-network
-        ports:
-            - 27017:27017
         container_name: mongo-container
         volumes:
             - mongo-volume:/data/db
