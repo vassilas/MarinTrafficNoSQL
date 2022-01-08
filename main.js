@@ -12,12 +12,12 @@ const app = express();
 
 // Connect to MongoDB
 mongo.mongoConnect().then(()=>{
-    console.log("Connected to MongoDB")
-    return mongo.loadCSV()
-}).then(() => {
-    console.log("Data loaded to mongoDB")
-}).catch(error => {
-    console.error(error)
+    mongo.loadCSV(csvName="./data/anfr_sample.csv",collectionName="anfr",csv_delimiter=",").then(()=>{
+        console.log("ANFR Data loaded to mongoDB");
+        mongo.loadCSV("./data/nari_dynamic_sample.csv","nari_dynamic").then(()=>{
+            console.log("NARI_DYNAMIC Data loaded to mongoDB")
+        })
+    })    
 });
 
 // get the API routing started

@@ -16,6 +16,10 @@
         <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_midnight.min.css" rel="stylesheet">
         <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 
+        <!-- LEAFLET -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
         <!-- MY CSS -->
         <link href="index.css" rel="stylesheet">
     </head>
@@ -32,7 +36,8 @@
     <form>
         <div>
             <label class="input-label" for="maritime_area">maritime_area: </label>
-            <input type="text" id="maritime_area" name="maritime_area" value="NI"/>
+            <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
+            <input type="text" id="maritime_area" name="maritime_area"/>
         </div>
         <div>
             <label class="input-label" for="registration_number">registration_number: </label>
@@ -52,7 +57,8 @@
         </div>
         <div>
             <label class="input-label" for="shiptype">shiptype: </label>
-            <input type="text" id="shiptype" name="shiptype" value="FISHING"/>
+            <!-- <input type="text" id="shiptype" name="shiptype" value="FISHING"/> -->
+            <input type="text" id="shiptype" name="shiptype"/>
         </div>
         <div>
     <!--<input type="submit" name="submit" value="Submit">-->

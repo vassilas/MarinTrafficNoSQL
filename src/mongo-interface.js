@@ -1,51 +1,14 @@
 const mongodb = require('mongodb');
 // const fs = require('fs');
 const csvtojson = require('csvtojson');
-const converter=csvtojson({delimiter:";"})
+
 
 const mongoHostName = process.env.DB_HOSTNAME;
-const dbName = "simple-nodejs-mongodb-docker-app";
+const dbName = "marin_data";
 const url = "mongodb://" + mongoHostName + ":27017/" + dbName;
 
 const csvFileName_anfr = "./data/anfr.csv";
-/**
- * This class holds anfr information.
- */
-//  class anfr {
-//     constructor(maritime_area, 
-//             registration_number, 
-//             imo_number, 
-//             ship_name, 
-//             callsign,
-//             mmsi,
-//             shiptype,
-//             length,
-//             tonnage,
-//             tonnage_unit,
-//             materiel_onboard,
-//             atis_code,
-//             radio_license_status,
-//             date_first_license,
-//             date_inactivity_license
-//         ) {
-//             // Entry ticks up from 0 for each entry in the database; this lets us
-//             // do stuff like "select all entries divisible by n
-//             this["registration_number"] = registration_number
-//             this["imo_numbe"] = imo_numbe
-//             this["ship_nam"] = ship_nam
-//             this["callsig"] = callsig
-//             this["mms"] = mms
-//             this["shiptyp"] = shiptyp
-//             this["lengt"] = lengt
-//             this["tonnag"] = tonnag
-//             this["tonnage_uni"] = tonnage_uni
-//             this["materiel_onboar"] = materiel_onboar
-//             this["atis_cod"] = atis_cod
-//             this["radio_license_statu"] = radio_license_statu
-//             this["date_first_licens"] = date_first_licens
-//             this["date_inactivity_license"] = date_inactivity_license
-//     }
-// }
+
 
 const mongoClient = new mongodb.MongoClient(url);
 console.log(url)
@@ -73,27 +36,49 @@ console.log(url)
     }
 }
 
-async function loadCSV(csvName=csvFileName_anfr) {
+async function loadCSV(csvName=csvFileName_anfr,collectionName="anfr",csv_delimiter=",") {
 
+    const converter=csvtojson({delimiter:csv_delimiter})
     arrayToInsert = [];
     const source = await converter.fromFile(csvName);
     
     // Fetching the all data from each row
+    // ----------------------------------------------
     for ( i = 0; i < source.length; i++) {
         //console.debug(source[i]);
         arrayToInsert.push(source[i]);
     }
 
+    // drop all databases
+    // ----------------------------------------------
+    // await drop_all_Databases();
+
+
     // this is the database
+    // ----------------------------------------------
     const database = mongoClient.db(dbName);
     console.debug("Created/opened database " + dbName);
 
-    // this is the courses collection
-    const collectionName = 'anfr';
-    const anfrCollection = database.collection(collectionName);
-    anfrCollection.drop();
+    
+    // List of current databases
+    // ----------------------------------------------
+    // all_dbs = await listDatabases()
+    // console.log(all_dbs)
+    
 
-    return anfrCollection.insertMany(arrayToInsert);
+    // this is the anfr collection
+    // ----------------------------------------------
+    const anfrCollection = database.collection(collectionName);
+    
+    // Drop collection in order to recreate it
+    // ----------------------------------------------
+    console.log("Drom collection ["+collectionName+"]")
+    anfrCollection.deleteMany({});
+    
+    
+    // insert data to anfr collection
+    // ----------------------------------------------
+    return await anfrCollection.insertMany(arrayToInsert);
 }
 
 
@@ -127,6 +112,31 @@ async function readAllCollectionData(query) {
     const returnValue = await queryDatabase(mongoQuery);
     //console.log(returnValue);
 }
+
+
+
+
+
+async function listDatabases(){
+    const database = mongoClient.db("admin");
+    const all_dbs = (await database.admin().listDatabases()).databases;
+    return all_dbs;
+}
+
+async function drop_all_Databases(){
+    const database = mongoClient.db("admin");
+    const all_dbs = (await database.admin().listDatabases()).databases;
+    for( db in all_dbs ){
+        if( all_dbs[db].name != "admin" && 
+            all_dbs[db].name != "config" && 
+            all_dbs[db].name != "local" ){
+                console.log(all_dbs[db].name)
+                const drop_database = mongoClient.db(all_dbs[db].name);
+                await drop_database.dropDatabase();
+        }
+    }
+}
+
 
 
 exports.mongoConnect = mongoConnect;

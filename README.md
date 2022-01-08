@@ -20,6 +20,7 @@ docker-compose up --build
 ## Set Enviroment Variable
 ```bash
 [System.Environment]::SetEnvironmentVariable('DB_HOSTNAME','mongo-container')
+[System.Environment]::SetEnvironmentVariable('DB_HOSTNAME','0.0.0.0')
 ```
 
 
