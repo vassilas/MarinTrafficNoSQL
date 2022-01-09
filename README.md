@@ -29,3 +29,11 @@ docker-compose up --build
 docker-compose up -d mongo
 npm start
 ```
+
+
+
+## some resources to study
+Leaflet.BoatMarker
+https://github.com/thomasbrueggemann/leaflet.boatmarker
+leaflet-marker-vessel
+https://github.com/FCOO/leaflet-marker-vessel

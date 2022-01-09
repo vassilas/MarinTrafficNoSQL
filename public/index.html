@@ -20,6 +20,12 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
+        <!-- Leaflet.BoatMarker -->
+        <script src="https://unpkg.com/leaflet.boatmarker/leaflet.boatmarker.min.js"></script>
+
+        <!-- Embed MarineTraffic Map -->
+        <!-- <script type="text/javascript" src="http://www.marinetraffic.com/js/embed.js"></script> -->
+
         <!-- MY CSS -->
         <link href="index.css" rel="stylesheet">
     </head>
@@ -30,51 +36,85 @@
     <h1>Description</h1>
     <p>Marin-Traffic with MongoDB</p>
     <hr>
+        <div id="map"></div>
+    <hr>
 
-    <h2>Search ANFR</h2>
-    <!--<form method="get" action="http://localhost:8080/api/">-->
-    <form>
-        <div>
-            <label class="input-label" for="maritime_area">maritime_area: </label>
-            <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
-            <input type="text" id="maritime_area" name="maritime_area"/>
-        </div>
-        <div>
-            <label class="input-label" for="registration_number">registration_number: </label>
-            <input type="text" id="registration_number" name="registration_number" />
-        </div>
-        <div>
-            <label class="input-label" for="imo_number">imo_number: </label>
-            <input type="text" id="imo_number" name="imo_number" />
-        </div>
-        <div>
-            <label class="input-label" for="ship_name">ship_name: </label>
-            <input type="text" id="ship_name" name="ship_name" />
-        </div>
-        <div>
-            <label class="input-label" for="mmsi">mmsi: </label>
-            <input type="text" id="mmsi" name="mmsi"/>
-        </div>
-        <div>
-            <label class="input-label" for="shiptype">shiptype: </label>
-            <!-- <input type="text" id="shiptype" name="shiptype" value="FISHING"/> -->
-            <input type="text" id="shiptype" name="shiptype"/>
-        </div>
-        <div>
-    <!--<input type="submit" name="submit" value="Submit">-->
-            <input type="button" name="submit" value="Search" onclick="makeApiCall_ANFR()">
-            <input type="reset" name="clear" value="Clear">
-        </div>
-    </form>
+    <table><tr>
+        <th>
+            <h2>Search ANFR</h2>
+            <!--<form method="get" action="http://localhost:8080/api/">-->
+            <form>
+                <div>
+                    <label class="input-label" for="maritime_area">maritime_area: </label>
+                    <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
+                    <input type="text" id="maritime_area" name="maritime_area"/>
+                </div>
+                <div>
+                    <label class="input-label" for="registration_number">registration_number: </label>
+                    <input type="text" id="registration_number" name="registration_number" />
+                </div>
+                <div>
+                    <label class="input-label" for="imo_number">imo_number: </label>
+                    <input type="text" id="imo_number" name="imo_number" />
+                </div>
+                <div>
+                    <label class="input-label" for="ship_name">ship_name: </label>
+                    <input type="text" id="ship_name" name="ship_name" />
+                </div>
+                <div>
+                    <label class="input-label" for="mmsi">mmsi: </label>
+                    <input type="text" id="mmsi" name="mmsi"/>
+                </div>
+                <div>
+                    <label class="input-label" for="shiptype">shiptype: </label>
+                    <!-- <input type="text" id="shiptype" name="shiptype" value="FISHING"/> -->
+                    <input type="text" id="shiptype" name="shiptype"/>
+                </div>
+                <div>
+            <!--<input type="submit" name="submit" value="Submit">-->
+                    <input type="button" name="submit" value="Search" onclick="makeApiCall_ANFR()">
+                    <input type="reset" name="clear" value="Clear">
+                </div>
+            </form>
+        </th>
+        <th>
+            <h2>Search Nari Dynamic</h2>
+            <!--<form method="get" action="http://localhost:8080/api/">-->
+            <form>
+                <div>
+                    <label class="input-label" for="sourcemmsi">sourcemmsi: </label>
+                    <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
+                    <input type="text" id="sourcemmsi" name="sourcemmsi"/>
+                </div>
+                <div>
+                    <label class="input-label" for="lon">lon: </label>
+                    <input type="text" id="lon" name="lon" />
+                </div>
+                <div>
+                    <label class="input-label" for="lat">lat: </label>
+                    <input type="text" id="lat" name="lat" />
+                </div>
+                <div>
+                    <label class="input-label" for="t">t: </label>
+                    <input type="text" id="t" name="t" />
+                </div>
+                <div>
+            <!--<input type="submit" name="submit" value="Submit">-->
+                    <input type="button" name="submit" value="Search" onclick="makeApiCall_NARI()">
+                    <input type="reset" name="clear" value="Clear">
+                </div>
+            </form>
+        </th>
+    </tr></table>
 
     <br>
     <hr>
-    <h2>Results ANFR</h2>
+    <h2>Results</h2>
     <!-- this will hold the result div -->
     <div id="example-table"></div>
     <br>
     <hr>
-    <h2>Results ANFR - json raw data</h2>
+    <h2>Results - json raw data</h2>
     <div id="result-div">
 
     </div>

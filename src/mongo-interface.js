@@ -82,14 +82,13 @@ async function loadCSV(csvName=csvFileName_anfr,collectionName="anfr",csv_delimi
 }
 
 
-async function queryDatabase(query) {
+async function queryDatabase(collectionName,query) {
     try {
 
 
         // wait for MongoDB connection to disconnect
         // await mongoClient.connect();
         const database = mongoClient.db(dbName);
-        const collectionName = 'anfr';
         const anfrCollection = database.collection(collectionName);
 
         return await anfrCollection.find(query).toArray();
