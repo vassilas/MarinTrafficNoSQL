@@ -36,91 +36,118 @@
     <h1>Description</h1>
     <p>Marin-Traffic with MongoDB</p>
     <hr>
-        <div id="map"></div>
+    <h2>Ships Position</h2>
+    <!--<form method="get" action="http://localhost:8080/api/">-->
+    <form>
+        <div>
+            <label class="input-label" for="date">date: </label>
+            <input type="date" id="date" name="date" value="2015-12-01" />
+        </div>
+        <div>
+    <!--<input type="submit" name="submit" value="Submit">-->
+            <input type="button" class="btn btn-primary" name="submit" value="Search" onclick="makeApiCall_ShipsPosition()">
+            <input type="reset" class="btn btn-light" name="clear" value="Clear">
+        </div>
+    </form>
+    <hr>
+    <div id="map"></div>
     <hr>
 
-    <table><tr>
-        <th>
+    <!-- <table><tr>
+        <th> -->
+    <div class="row">
+        <div class="col">
             <h2>Search ANFR</h2>
             <!--<form method="get" action="http://localhost:8080/api/">-->
             <form>
-                <div>
-                    <label class="input-label" for="maritime_area">maritime_area: </label>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="maritime_area">maritime_area: </label>
                     <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
-                    <input type="text" id="maritime_area" name="maritime_area"/>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="maritime_area" name="maritime_area"/>
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="registration_number">registration_number: </label>
-                    <input type="text" id="registration_number" name="registration_number" />
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="registration_number">registration_number: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="registration_number" name="registration_number" />
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="imo_number">imo_number: </label>
-                    <input type="text" id="imo_number" name="imo_number" />
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="imo_number">imo_number: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="imo_number" name="imo_number" />
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="ship_name">ship_name: </label>
-                    <input type="text" id="ship_name" name="ship_name" />
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="ship_name">ship_name: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="ship_name" name="ship_name" />
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="mmsi">mmsi: </label>
-                    <input type="text" id="mmsi" name="mmsi"/>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="mmsi">mmsi: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="mmsi" name="mmsi" value="227004860"/>
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="shiptype">shiptype: </label>
-                    <!-- <input type="text" id="shiptype" name="shiptype" value="FISHING"/> -->
-                    <input type="text" id="shiptype" name="shiptype"/>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="shiptype">shiptype: </label>
+                    <div class="col-sm-6">
+                        <!-- <input type="text" id="shiptype" name="shiptype" value="FISHING"/> -->
+                        <input type="text" class="form-control" id="shiptype" name="shiptype"/>
+                    </div>
                 </div>
                 <div>
             <!--<input type="submit" name="submit" value="Submit">-->
-                    <input type="button" name="submit" value="Search" onclick="makeApiCall_ANFR()">
-                    <input type="reset" name="clear" value="Clear">
+                    <input type="button" class="btn btn-primary" name="submit" value="Search" onclick="makeApiCall_ANFR()">
+                    <input type="reset" class="btn btn-secondary" name="clear" value="Clear">
                 </div>
             </form>
-        </th>
-        <th>
+        </div>
+        <!-- </th>
+        <th> -->
+        <div class="col">
             <h2>Search Nari Dynamic</h2>
             <!--<form method="get" action="http://localhost:8080/api/">-->
             <form>
-                <div>
-                    <label class="input-label" for="sourcemmsi">sourcemmsi: </label>
-                    <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
-                    <input type="text" id="sourcemmsi" name="sourcemmsi"/>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="sourcemmsi">sourcemmsi: </label>
+                    <div class="col-sm-6">
+                        <!-- <input type="text" id="maritime_area" name="maritime_area" value="NI"/> -->
+                        <input type="text" class="form-control" id="sourcemmsi" name="sourcemmsi" value="227004860"/>
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="lon">lon: </label>
-                    <input type="text" id="lon" name="lon" />
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="lon">lon: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="lon" name="lon" />
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="lat">lat: </label>
-                    <input type="text" id="lat" name="lat" />
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="lat">lat: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="lat" name="lat" />
+                    </div>
                 </div>
-                <div>
-                    <label class="input-label" for="t">t: </label>
-                    <input type="text" id="t" name="t" />
-                </div>
-                <div>
-            <!--<input type="submit" name="submit" value="Submit">-->
-                    <input type="button" name="submit" value="Search" onclick="makeApiCall_NARI()">
-                    <input type="reset" name="clear" value="Clear">
-                </div>
-            </form>
-        </th>
-        <th>
-            <h2>Ships Position</h2>
-            <!--<form method="get" action="http://localhost:8080/api/">-->
-            <form>
-                <div>
-                    <label class="input-label" for="date">date: </label>
-                    <input type="date" id="date" name="date" value="2015-12-01" />
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="t">t: </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="t" name="t" />
+                    </div>
                 </div>
                 <div>
             <!--<input type="submit" name="submit" value="Submit">-->
-                    <input type="button" name="submit" value="Search" onclick="makeApiCall_ShipsPosition()">
-                    <input type="reset" name="clear" value="Clear">
+                    <input type="button" class="btn btn-primary" name="submit" value="Search" onclick="makeApiCall_NARI()">
+                    <input type="reset" class="btn btn-secondary" name="clear" value="Clear">
                 </div>
             </form>
-        </th>
-    </tr></table>
+        </div>
+        <!-- </th>
+        <th> -->
+    </div> 
+        <!-- </th>
+    </tr></table> -->
 
     <br>
     <hr>

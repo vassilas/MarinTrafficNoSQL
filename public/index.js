@@ -56,14 +56,30 @@ function makeApiCall_NARI() {
 function makeApiCall_ShipsPosition(){
 
     const date_content = document.getElementById("date").value ;
-    console.log(date_content)
 
     url = "http://localhost:8080/api?"+
         "COLLECTION=" + "nari_dynamic" +
         "&OPTIONS="+"DISTINCT";
     if(date_content != "")
         url += "&date="+date_content
-    fetch(url).then(response => response.json()).then(data => showResults(data));
+    fetch(url).then(response => response.json())
+    .then(data => {
+        showResults(data)
+
+        // REMOVE ALL MARKERS
+        markers.forEach(marker => marker.remove());
+
+        // ADD SHIPS TO MAP
+        for(i in data){ 
+            vessel_latlng = {lat:data[i].lat,lng:data[i].lon};
+            var boatMarker = L.boatMarker(vessel_latlng, {
+                color: "#f1c40f", 	// color of the boat
+                idleCircle: false	// if set to true, the icon will draw a circle if
+                                  // boatspeed == 0 and the ship-shape if speed > 0
+            }).addTo(map);
+            markers.push(boatMarker)
+        }
+    });
 }
 
 
@@ -89,11 +105,11 @@ function showResults(resultsObject) {
 
 }
 
-var map = L.map('map').setView([51.505, 30], 3);
+var map = L.map('map').setView([48.43845,-4.8407316], 6);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 10,
+    maxZoom: 15,
     id: 'mapbox/satellite-v9',
     tileSize: 512,
     zoomOffset: -1,
@@ -103,21 +119,5 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 // ADD VESSELS
 // -----------------------------------------------------
-// vessel 1
-vessel_latlng = {lat:48.38249,lng:-4.4657183};
-var boatMarker1 = L.boatMarker(vessel_latlng, {
-    color: "#f1c40f", 	// color of the boat
-    idleCircle: false	// if set to true, the icon will draw a circle if
-                      // boatspeed == 0 and the ship-shape if speed > 0
-}).addTo(map);
-// boatMarker.setHeading(60);
-// boatMarker.setHeadingWind(60, 4.5, 20);
-// boatMarker.setSpeed(12.9);
-
-// vessel 2
-vessel_latlng = {lat:48.092247,lng:-4.644325};
-var boatMarker2 = L.boatMarker(vessel_latlng, {
-    color: "#f1c40f", 	// color of the boat
-    idleCircle: false	// if set to true, the icon will draw a circle if
-                      // boatspeed == 0 and the ship-shape if speed > 0
-}).addTo(map);
+markers = [];
+makeApiCall_ShipsPosition()

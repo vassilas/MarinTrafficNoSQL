@@ -1,2 +1,6 @@
 node_modules
 npm-debug.log
+data/anfr.csv
+data/nari_dynamic.csv
+data/anfr_sample.csv
+data/nari_dynamic_sample.csv

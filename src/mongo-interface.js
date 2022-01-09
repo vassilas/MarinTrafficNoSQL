@@ -94,7 +94,17 @@ async function queryDatabase(collectionName,query,command) {
         if(command == "FIND")
             return await Collection.find(query).toArray();
         else if(command == "DISTINCT")
-            return await Collection.distinct('sourcemmsi',query);
+            results = await Collection.find(query).toArray();
+            // remove duplicate sourcemmsi rows
+            filteredArr = await results.reduce((acc, current) => {
+                const x = acc.find(item => item.sourcemmsi === current.sourcemmsi);
+                if (!x) {
+                    return acc.concat([current]);
+                } else {
+                    return acc;
+                }
+              }, []);
+            return filteredArr;
     } catch (e) {
         console.log(e);
     } finally {
