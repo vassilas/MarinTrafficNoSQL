@@ -105,6 +105,21 @@
                 </div>
             </form>
         </th>
+        <th>
+            <h2>Ships Position</h2>
+            <!--<form method="get" action="http://localhost:8080/api/">-->
+            <form>
+                <div>
+                    <label class="input-label" for="date">date: </label>
+                    <input type="date" id="date" name="date" value="2015-12-01" />
+                </div>
+                <div>
+            <!--<input type="submit" name="submit" value="Submit">-->
+                    <input type="button" name="submit" value="Search" onclick="makeApiCall_ShipsPosition()">
+                    <input type="reset" name="clear" value="Clear">
+                </div>
+            </form>
+        </th>
     </tr></table>
 
     <br>

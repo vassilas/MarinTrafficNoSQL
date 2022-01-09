@@ -73,7 +73,7 @@ async function loadCSV(csvName=csvFileName_anfr,collectionName="anfr",csv_delimi
     // Drop collection in order to recreate it
     // ----------------------------------------------
     console.log("Drom collection ["+collectionName+"]")
-    anfrCollection.deleteMany({});
+    await anfrCollection.deleteMany({});
     
     
     // insert data to anfr collection
@@ -82,16 +82,19 @@ async function loadCSV(csvName=csvFileName_anfr,collectionName="anfr",csv_delimi
 }
 
 
-async function queryDatabase(collectionName,query) {
+async function queryDatabase(collectionName,query,command) {
     try {
 
 
         // wait for MongoDB connection to disconnect
         // await mongoClient.connect();
         const database = mongoClient.db(dbName);
-        const anfrCollection = database.collection(collectionName);
+        const Collection = database.collection(collectionName);
 
-        return await anfrCollection.find(query).toArray();
+        if(command == "FIND")
+            return await Collection.find(query).toArray();
+        else if(command == "DISTINCT")
+            return await Collection.distinct('sourcemmsi',query);
     } catch (e) {
         console.log(e);
     } finally {

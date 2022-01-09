@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 
 
-def nari_dynamic_sample_export(number_of_rows=10,appendix="_sample_2"):
+def nari_dynamic_sample_export(mmsi_in_interest,number_of_rows=10,appendix="_sample_2"):
 
     mmsi_in_interest_count_dict = {}
     mmsi_last_timestamp_dict = {}
@@ -16,7 +16,7 @@ def nari_dynamic_sample_export(number_of_rows=10,appendix="_sample_2"):
             break_flag = False
             for r in reader:
                 if line_count == 0:
-                    writer.writerow((r[0], r[6], r[7], r[8], "TimeStamp"))
+                    writer.writerow((r[0], r[6], r[7], r[8], "TimeStamp","date","time"))
                 line_count += 1
 
                 if r[0] not in mmsi_in_interest:
@@ -52,7 +52,7 @@ def nari_dynamic_sample_export(number_of_rows=10,appendix="_sample_2"):
                 # 8 't'
                 # ]
                 timestamp = datetime.fromtimestamp(float(r[8]))
-                writer.writerow((r[0], r[6], r[7], r[8], timestamp))
+                writer.writerow((r[0], r[6], r[7], r[8], timestamp,timestamp.date(),timestamp.time()))
                 
                 break_flag = True
                 for key in mmsi_in_interest_count_dict:
@@ -67,7 +67,7 @@ def nari_dynamic_sample_export(number_of_rows=10,appendix="_sample_2"):
 #
 #
 #
-def anfr_sample_export(appendix="_sample"):
+def anfr_sample_export(mmsi_in_interest,appendix="_sample"):
     with open('anfr.csv','r',encoding='utf-8') as input_csv_file:
         reader = csv.reader(input_csv_file,delimiter =';')
         count_lines = 0
@@ -92,7 +92,7 @@ def anfr_sample_export(appendix="_sample"):
 #
 def export_all_available_mmsi_in_nari_dynamic(max_list_length=20):
     mmsi_list = []
-    with open('nari_dynamic.csv') as input_csv_file:
+    with open('nari_dynamic.csv',encoding='utf-8') as input_csv_file:
         reader = csv.reader(input_csv_file)
         count_lines = 0
         for r in reader:
@@ -111,6 +111,27 @@ def export_all_available_mmsi_in_nari_dynamic(max_list_length=20):
 
         return mmsi_list
 
+def export_all_available_mmsi_in_anfr(max_list_length=20):
+    mmsi_list = []
+    with open('anfr.csv',encoding='utf-8') as input_csv_file:
+        reader = csv.reader(input_csv_file,delimiter =';')
+        count_lines = 0
+        for r in reader:
+
+            if count_lines == 0:
+                count_lines += 1
+                continue
+
+            if r[5] not in mmsi_list:
+                mmsi_list.append(r[5])
+            
+            count_lines += 1
+            if max_list_length != 0:
+                if len(mmsi_list) == max_list_length:
+                    break
+
+        return mmsi_list
+
 
 def nari_dynamic_sort_by_timestamp(input_csv):
     with open(input_csv,newline='') as csvfile:
@@ -119,7 +140,7 @@ def nari_dynamic_sort_by_timestamp(input_csv):
 
 
     with open(input_csv, 'w',newline='') as f:
-        fieldnames = ['sourcemmsi', 'lon', "lat","t","TimeStamp"]
+        fieldnames = ['sourcemmsi', 'lon', "lat","t","TimeStamp","date","time"]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for row in sortedlist:
@@ -133,9 +154,16 @@ if __name__ == "__main__":
     # nari_dynamic_sample_export(number_of_rows=max_nari_per_mmsi,appendix="_sample")
     # anfr_sample_export(appendix="_sample")
 
-    # max_mmsi_list = 0
-    # max_nari_per_mmsi = 50
-    # mmsi_in_interest = export_all_available_mmsi_in_nari_dynamic(max_list_length=max_mmsi_list)
-    # nari_dynamic_sample_export(number_of_rows=max_nari_per_mmsi,appendix="_sample_2")
-    # anfr_sample_export(appendix="_sample_2")
+    mmsi_in_interest = []
+    max_mmsi_list = 0
+    max_nari_per_mmsi = 50
+    mmsi_in_nari_dynamic = export_all_available_mmsi_in_nari_dynamic(max_list_length=max_mmsi_list)
+    mmsi_in_anfr = export_all_available_mmsi_in_anfr(max_list_length=max_mmsi_list)
+
+    for mmsi in mmsi_in_nari_dynamic:
+        if mmsi in mmsi_in_anfr:
+            mmsi_in_interest.append(mmsi)
+
+    nari_dynamic_sample_export(mmsi_in_interest,number_of_rows=max_nari_per_mmsi,appendix="_sample_2")
+    anfr_sample_export(mmsi_in_interest,appendix="_sample_2")
     nari_dynamic_sort_by_timestamp("nari_dynamic_sample_2.csv")

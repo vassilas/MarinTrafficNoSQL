@@ -10,14 +10,21 @@ function makeApiCall_ANFR() {
     const shiptype_content = document.getElementById("shiptype").value ;
     
 
-    const url = "http://localhost:8080/api?"+
-        "COLLECTION=" + "anfr" +
-        "&maritime_area=" + maritime_area_content +
-        "&registration_number=" + registration_number_content +
-        "&imo_number=" + imo_number_content +
-        "&ship_name=" + ship_name_content +
-        "&mmsi=" + mmsi_content +
-        "&shiptype=" + shiptype_content ;
+    url = "http://localhost:8080/api?"+
+        "COLLECTION=" + "anfr"+
+        "&OPTIONS="+"FIND";
+        if(maritime_area_content!="")
+            url += "&maritime_area=" + maritime_area_content;
+        if(registration_number_content!="")
+            url += "&registration_number=" + registration_number_content;
+        if(imo_number_content!="")
+            url += "&imo_number=" + imo_number_content;
+        if(ship_name_content!="")
+            url += "&ship_name=" + ship_name_content;
+        if(mmsi_content!="")
+            url += "&mmsi=" + mmsi_content;
+        if(shiptype_content!="")
+            url += "&shiptype=" + shiptype_content;
 
     fetch(url).then(response => response.json()).then(data => showResults(data));
 }
@@ -30,13 +37,32 @@ function makeApiCall_NARI() {
     const t_content = document.getElementById("t").value ;
 
 
-    const url = "http://localhost:8080/api?"+
+    url = "http://localhost:8080/api?"+
         "COLLECTION=" + "nari_dynamic" +
-        "&sourcemmsi=" + sourcemmsi_content +
-        "&lon=" + lon_content +
-        "&lat=" + lat_content +
-        "&t=" + t_content;
+        "&OPTIONS="+"FIND";
+        if(sourcemmsi_content!="")
+            url += "&sourcemmsi=" + sourcemmsi_content;
+        if(lon_content!="")
+            url += "&lon=" + lon_content;
+        if(lat_content!="")
+            url += "&lat=" + lat_content;
+        if(t_content!="")
+            url += "&t=" + t_content;
 
+
+    fetch(url).then(response => response.json()).then(data => showResults(data));
+}
+
+function makeApiCall_ShipsPosition(){
+
+    const date_content = document.getElementById("date").value ;
+    console.log(date_content)
+
+    url = "http://localhost:8080/api?"+
+        "COLLECTION=" + "nari_dynamic" +
+        "&OPTIONS="+"DISTINCT";
+    if(date_content != "")
+        url += "&date="+date_content
     fetch(url).then(response => response.json()).then(data => showResults(data));
 }
 

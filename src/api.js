@@ -5,8 +5,17 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     
+    console.log("QUERY TO API:")
     console.log(req.query);
     let mongoQuery = {};
+    let collection = req.query["COLLECTION"]
+    delete req.query.COLLECTION
+    console.log("Remove collection:")
+    console.log(req.query);
+    let options = req.query["OPTIONS"]
+    delete req.query.OPTIONS
+    console.log("Remove OPTIONS:")
+    console.log(req.query);
 
     if(req.query["COLLECTION"] == "anfr")
     {
@@ -59,11 +68,11 @@ router.get('/', async (req, res) => {
         }
     }
     
-
+    mongoQuery = req.query
     console.log("Attempting to make query:");
     console.log(JSON.stringify(mongoQuery, null, '    '));
     // get the return value from the MONGO using the mongoQuery object we just created and send it
-    const returnValue = await mongo.queryDatabase(collectionName=req.query["COLLECTION"],query=mongoQuery);
+    const returnValue = await mongo.queryDatabase(collectionName=collection,query=mongoQuery,options);
 
     // public API: allow calls from any IP
     res.set('Access-Control-Allow-Origin', '*');
