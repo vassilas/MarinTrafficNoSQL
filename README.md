@@ -2,14 +2,18 @@
 
 ## Description
 
+![alt text](https://raw.githubusercontent.com/vassilas/MarinTrafficNoSQL/main/public/images/map_sample.png)
+
 ## Build and run the Docker image
 ```bash
 # Build the docker image
 docker build . -t vasikas/marine-nosql  
 # Run in detached mode
-docker run --rm -p 49160:8080 -d vasikas/marine-nosql
+docker run --rm -p 8080:8080 -d vasikas/marine-nosql
 # Run in none-detached mode
-docker run --rm -it -p 49160:8080 vasikas/marine-nosql
+docker run --rm -it -p 8080:8080 vasikas/marine-nosql
+# Push image to dockerhub
+docker push vasikas/marine-nosql
 ```
 ## build and run with docker compose
 ```bash
