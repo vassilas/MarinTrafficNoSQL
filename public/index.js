@@ -56,7 +56,7 @@ function makeApiCall_NARI() {
 function makeApiCall_ShipsPosition(){
 
     const date_content = document.getElementById("date").value ;
-
+    document.getElementById("Timestamp").innerHTML = date_content;
     url = "http://localhost:8080/api?"+
         "COLLECTION=" + "nari_dynamic" +
         "&OPTIONS="+"DISTINCT";
@@ -149,6 +149,7 @@ function makeApiCall_ShipMovement(){
                 //     console.log("click");
                 // });
     
+                document.getElementById("Timestamp").innerHTML = positions[i].TimeStamp;
                 markers.push(boatMarker)
 
 
