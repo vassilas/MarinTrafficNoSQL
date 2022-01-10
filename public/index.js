@@ -62,6 +62,7 @@ function makeApiCall_ShipsPosition(){
         "&OPTIONS="+"DISTINCT";
     if(date_content != "")
         url += "&date="+date_content
+
     fetch(url).then(response => response.json())
     .then(data => {
         showResults(data)
@@ -74,9 +75,21 @@ function makeApiCall_ShipsPosition(){
             vessel_latlng = {lat:data[i].lat,lng:data[i].lon};
             var boatMarker = L.boatMarker(vessel_latlng, {
                 color: "#f1c40f", 	// color of the boat
-                idleCircle: false	// if set to true, the icon will draw a circle if
+                idleCircle: false,	// if set to true, the icon will draw a circle if
                                   // boatspeed == 0 and the ship-shape if speed > 0
+                vesselInfo: data[i].sourcemmsi
             }).addTo(map);
+
+            
+            // POPUP for Vessel Info
+            boatMarker.bindPopup(
+                "mmsi: " + data[i].sourcemmsi +" <br>"+
+                "time: " + data[i].time
+            );
+            // .on('click', function(e) {
+            //     console.log("click");
+            // });
+
             markers.push(boatMarker)
         }
     });
@@ -109,7 +122,7 @@ var map = L.map('map').setView([48.43845,-4.8407316], 6);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 15,
+    maxZoom: 20,
     id: 'mapbox/satellite-v9',
     tileSize: 512,
     zoomOffset: -1,

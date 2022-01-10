@@ -37,7 +37,7 @@ npm start
 
 
 ## some resources to study
-Leaflet.BoatMarker
+* Leaflet.BoatMarker
 https://github.com/thomasbrueggemann/leaflet.boatmarker
-leaflet-marker-vessel
+* leaflet-marker-vessel
 https://github.com/FCOO/leaflet-marker-vessel
