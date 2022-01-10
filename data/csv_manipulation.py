@@ -16,7 +16,7 @@ def nari_dynamic_sample_export(mmsi_in_interest,number_of_rows=10,appendix="_sam
             break_flag = False
             for r in reader:
                 if line_count == 0:
-                    writer.writerow((r[0], r[6], r[7], r[8], "TimeStamp","date","time"))
+                    writer.writerow((r[0] ,r[5] ,r[6], r[7], r[8], "TimeStamp","date","time"))
                 line_count += 1
 
                 if r[0] not in mmsi_in_interest:
@@ -52,7 +52,7 @@ def nari_dynamic_sample_export(mmsi_in_interest,number_of_rows=10,appendix="_sam
                 # 8 't'
                 # ]
                 timestamp = datetime.fromtimestamp(float(r[8]))
-                writer.writerow((r[0], r[6], r[7], r[8], timestamp,timestamp.date(),timestamp.time()))
+                writer.writerow((r[0], r[5], r[6], r[7], r[8], timestamp,timestamp.date(),timestamp.time()))
                 
                 break_flag = True
                 for key in mmsi_in_interest_count_dict:
@@ -140,7 +140,7 @@ def nari_dynamic_sort_by_timestamp(input_csv):
 
 
     with open(input_csv, 'w',newline='') as f:
-        fieldnames = ['sourcemmsi', 'lon', "lat","t","TimeStamp","date","time"]
+        fieldnames = ['sourcemmsi','trueheading','lon', "lat","t","TimeStamp","date","time"]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for row in sortedlist:

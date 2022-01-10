@@ -79,8 +79,13 @@ function makeApiCall_ShipsPosition(){
                                   // boatspeed == 0 and the ship-shape if speed > 0
                 vesselInfo: data[i].sourcemmsi
             }).addTo(map);
-
             
+            // set heading
+            heading = data[i].trueheading
+            if(heading == 511)
+                heading = 0
+            boatMarker.setHeading(heading);
+ 
             // POPUP for Vessel Info
             boatMarker.bindPopup(
                 "mmsi: " + data[i].sourcemmsi +" <br>"+
@@ -93,6 +98,65 @@ function makeApiCall_ShipsPosition(){
             markers.push(boatMarker)
         }
     });
+}
+
+function makeApiCall_ShipMovement(){
+    console.log("makeApiCall_ShipMovement");
+    const ship_mmsi_content = document.getElementById("ship_mmsi").value ;
+
+
+    url = "http://localhost:8080/api?"+
+        "COLLECTION=" + "anfr_nari_dynamic" +
+        "&OPTIONS="+"FIND";
+    if(ship_mmsi_content != "")
+        url += "&mmsi="+ship_mmsi_content
+    else{
+        return
+    }
+
+    fetch(url).then(response => response.json())
+    .then(data => {
+
+        positions = data[0].nari_dynamic
+        for(let i = 0; i < positions.length ; i++){
+            // console.log(positions[pos])
+            setTimeout(function () {
+                console.log(positions[i]);
+                
+                // REMOVE ALL MARKERS
+                markers.forEach(marker => marker.remove());
+                
+                vessel_latlng = {lat:positions[i].lat,lng:positions[i].lon};
+                var boatMarker = L.boatMarker(vessel_latlng, {
+                    color: "#f1c40f", 	// color of the boat
+                    idleCircle: false,	// if set to true, the icon will draw a circle if
+                                      // boatspeed == 0 and the ship-shape if speed > 0
+                    vesselInfo: positions[i].sourcemmsi
+                }).addTo(map);
+                
+                // set heading
+                heading = positions[i].trueheading
+                if(heading == 511)
+                    heading = 0
+                boatMarker.setHeading(heading);
+     
+                // POPUP for Vessel Info
+                boatMarker.bindPopup(
+                    "mmsi: " + positions[i].sourcemmsi +" <br>"+
+                    "time: " + positions[i].time
+                );
+                // .on('click', function(e) {
+                //     console.log("click");
+                // });
+    
+                markers.push(boatMarker)
+
+
+            }, 1000 * i);
+        }
+    });
+    
+
 }
 
 
@@ -110,10 +174,14 @@ function showResults(resultsObject) {
 
     var tabledata = resultsObject;
     
+
     //initialize table
     var table = new Tabulator("#example-table", {
         data:tabledata, //assign data to table
         autoColumns:true, //create columns from data field names
+        pagination:"local",
+        paginationSize:5,
+        paginationSizeSelector:[5,10,15,20],
     });
 
 }

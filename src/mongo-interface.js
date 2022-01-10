@@ -66,19 +66,66 @@ async function loadCSV(csvName=csvFileName_anfr,collectionName="anfr",csv_delimi
     // console.log(all_dbs)
     
 
-    // this is the anfr collection
+    // this is the collection
     // ----------------------------------------------
-    const anfrCollection = database.collection(collectionName);
+    const Collection = database.collection(collectionName);
     
     // Drop collection in order to recreate it
     // ----------------------------------------------
-    console.log("Drom collection ["+collectionName+"]")
-    await anfrCollection.deleteMany({});
+    console.log("Drop collection ["+collectionName+"]")
+    await Collection.deleteMany({});
     
     
-    // insert data to anfr collection
+    // insert data to collection
     // ----------------------------------------------
-    return await anfrCollection.insertMany(arrayToInsert);
+    return await Collection.insertMany(arrayToInsert);
+}
+
+
+async function load_ANFR_Nari_Dynamic(){
+    
+    
+
+    // this is the database
+    // ----------------------------------------------
+    const database = mongoClient.db(dbName);
+    console.debug("Created/opened database " + dbName);
+
+    // this is the collection
+    // ----------------------------------------------
+    collectionName="anfr_nari_dynamic"
+    const Collection = database.collection(collectionName);
+
+    // Drop collection in order to recreate it
+    // ----------------------------------------------
+    console.log("Drop collection ["+collectionName+"]");
+    await Collection.deleteMany({});
+
+    // Read the data from the tow collections and combine them
+    // ----------------------------------------------
+    all_anfr = await queryDatabase("anfr",{},"FIND");
+
+    // insert data to collection
+    // ----------------------------------------------
+    arrayToInsert = []
+    for(anfr in all_anfr){
+
+        nari_dynamic_per_mmsi = await queryDatabase("nari_dynamic",{sourcemmsi:all_anfr[anfr].mmsi},"FIND");
+        doc_to_insert = all_anfr[anfr]
+        doc_to_insert["nari_dynamic"] = []
+        for(pos in nari_dynamic_per_mmsi){
+            doc_to_insert["nari_dynamic"].push(nari_dynamic_per_mmsi[pos])
+        }
+
+        arrayToInsert.push(doc_to_insert)
+
+    }
+
+    // INSERT data to collection 
+    // ----------------------------------------------
+    if(arrayToInsert.length != 0)
+        return await Collection.insertMany(arrayToInsert);
+
 }
 
 
@@ -156,3 +203,4 @@ exports.mongoDisconnect = mongoDisconnect;
 exports.loadCSV = loadCSV;
 exports.readAllCollectionData = readAllCollectionData;
 exports.queryDatabase = queryDatabase;
+exports.load_ANFR_Nari_Dynamic = load_ANFR_Nari_Dynamic;
