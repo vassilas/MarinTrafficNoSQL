@@ -57,11 +57,17 @@ function makeApiCall_ShipsPosition(){
 
     const date_content = document.getElementById("date").value ;
     document.getElementById("Timestamp").innerHTML = date_content;
-    url = "http://localhost:8080/api?"+
-        "COLLECTION=" + "nari_dynamic" +
-        "&OPTIONS="+"DISTINCT";
-    if(date_content != "")
-        url += "&date="+date_content
+
+    collection = "nari_dynamic_per_day"
+    filter = "{\"date\" : \""+date_content+"\"}"
+    project = "{}"
+    query_text.innerHTML = "["+collection+"] : "+filter + "," + project
+    query_text_description.innerHTML = "Find all ship locations of date 2015-12-27"
+    _query = "COLLECTION=" + collection  + 
+            "&filter="+ filter + 
+            "&project="+ project;
+
+    url = "http://localhost:8080/api/query?" + _query;
 
     fetch(url).then(response => response.json())
     .then(data => {
@@ -95,8 +101,73 @@ function makeApiCall_ShipsPosition(){
             //     console.log("click");
             // });
 
+            
+
             markers.push(boatMarker)
         }
+
+        // CLICK ON MARKER EVENT
+        markers.forEach(marker => marker.on("click", function(e) {
+            
+                console.log(marker);
+                // console.log(marker.options.vesselInfo);
+                // marker.remove()
+
+
+                collection = "nari_dynamic_per_day"
+                // {"location.coordinates":{$near:{$geometry:{type: "Point", coordinates: [-3.4032934,47.150867]},$maxDistance:10000}}}
+                filter = "{\"date\" : \""+date_content+"\",\"location.coordinates\":{\"\$near\":{\"\$geometry\":{\"type\": \"Point\", \"coordinates\": ["+marker._latlng.lng+","+marker._latlng.lat+"]},\"\$maxDistance\":30000}}}"
+                project = "{}"
+                query_text.innerHTML = "["+collection+"] : "+filter + "," + project
+                query_text_description.innerHTML = "Find all ship locations near to [-3.4032934,47.150867] with max Distance 10000"
+                _query = "COLLECTION=" + collection  + 
+                    "&filter="+ filter + 
+                    "&project="+ project;
+                
+                console.log(_query)
+
+                url = "http://localhost:8080/api/query?" + _query;
+                fetch(url).then(response => response.json()).then(data => {
+                    
+                    console.log(data)
+                    
+                    for(i in data){ 
+                        vessel_latlng = {lat:data[i].lat,lng:data[i].lon};
+
+                        markers.forEach(marker => function(e) {
+                            if(data[i].sourcemmsi == marker.options.vesselInfo)
+                                marker.remove()
+                        });
+
+                        var boatMarker = L.boatMarker(vessel_latlng, {
+                            color: "#ff0000", 	// color of the boat
+                            idleCircle: false,	// if set to true, the icon will draw a circle if
+                                              // boatspeed == 0 and the ship-shape if speed > 0
+                            vesselInfo: data[i].sourcemmsi
+                        }).addTo(map);
+                        
+                        // set heading
+                        heading = data[i].trueheading
+                        if(heading == 511)
+                            heading = 0
+                        boatMarker.setHeading(heading);
+             
+                        // POPUP for Vessel Info
+                        boatMarker.bindPopup(
+                            "mmsi: " + data[i].sourcemmsi +" <br>"+
+                            "time: " + data[i].time
+                        );
+                        
+            
+                        markers.push(boatMarker)
+                    }
+                    
+                });
+            })
+        );
+
+    
+
     });
 }
 
@@ -165,7 +236,6 @@ function makeApiCall_MongoQuery(test) {
     const query_text = document.getElementById('query_text');
     const query_text_description = document.getElementById('query_text_description');
 
-
     switch(test){
 
         case 1:
@@ -193,13 +263,14 @@ function makeApiCall_MongoQuery(test) {
         case 3:
         // ============================================================
             collection = "nari_dynamic_per_day"
-            filter = "{\"date\" : \"2015-12-27\"}"
+            filter = "{\"date\" : \"2015-12-01\"}"
             project = "{}"
             query_text.innerHTML = "["+collection+"] : "+filter + "," + project
             query_text_description.innerHTML = "Find all ship locations of date 2015-12-27"
             _query = "COLLECTION=" + collection  + 
                     "&filter="+ filter + 
                     "&project="+ project;
+            break;
         case 4:
         // ============================================================
             collection = "nari_dynamic_per_day"
