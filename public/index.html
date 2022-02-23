@@ -188,6 +188,33 @@
     <div id="example-table"></div>
     <br>
     <hr>
+
+    <h2>Test Queries</h2>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select a test Query
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" onclick="makeApiCall_MongoQuery(1)">Query - 1</a>
+            <a class="dropdown-item" onclick="makeApiCall_MongoQuery(2)">Query - 2</a>
+            <a class="dropdown-item" onclick="makeApiCall_MongoQuery(3)">Query - 3</a>
+            <a class="dropdown-item" onclick="makeApiCall_MongoQuery(4)">Query - 4 (GeoNear)</a>
+        </div>
+    </div>
+    
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Executed Query</h4>
+        <p id="query_text"></p>
+        <hr>
+        <p class="mb-0" id="query_text_description"></p>
+    </div>
+
+    <!-- <input type="button" class="btn btn-primary" name="submit" value="Search" onclick="makeApiCall_MongoQuery()"> -->
+    
+    
+    <br>
+    <hr>
+
     <h2>Results - json raw data</h2>
     <div id="result-div">
 

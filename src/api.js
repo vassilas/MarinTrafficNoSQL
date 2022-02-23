@@ -73,10 +73,30 @@ router.get('/', async (req, res) => {
     console.log(JSON.stringify(mongoQuery, null, '    '));
     // get the return value from the MONGO using the mongoQuery object we just created and send it
     const returnValue = await mongo.queryDatabase(collectionName=collection,query=mongoQuery,options);
+    // const returnValue = await mongo.queryDatabaseX(collectionName=collection,filter=mongoQuery,project={
+    //     '_id': 0
+    // });
 
     // public API: allow calls from any IP
     res.set('Access-Control-Allow-Origin', '*');
     res.send(returnValue)
 });
+
+
+router.get('/query/', async (req, res) => {
+    console.log("QUERY")
+    console.log(req.query)
+
+    let collection = req.query["COLLECTION"]
+    let filter = JSON.parse(req.query["filter"])
+    let project = JSON.parse(req.query["project"])
+
+
+    const returnValue = await mongo.queryDatabaseX(collectionName=collection,filter=filter,project=project);
+    // public API: allow calls from any IP
+    res.set('Access-Control-Allow-Origin', '*');
+    res.send(returnValue)
+})
+
 
 module.exports = router;

@@ -160,6 +160,68 @@ function makeApiCall_ShipMovement(){
 
 }
 
+function makeApiCall_MongoQuery(test) {
+    
+    const query_text = document.getElementById('query_text');
+    const query_text_description = document.getElementById('query_text_description');
+
+
+    switch(test){
+
+        case 1:
+        // ============================================================
+            collection = "anfr_nari_dynamic_per_day"
+            filter = "{\"registration_number\" : \"734518P\"}"
+            project = "{}"
+            query_text.innerHTML = "["+collection+"] : "+filter + "," + project
+            query_text_description.innerHTML = "Search by Registration Number the anfr_nari_dynamic_per_day collection and show all the data"
+            _query = "COLLECTION=" + collection  + 
+                    "&filter="+ filter + 
+                    "&project="+ project;
+            break;
+        case 2:
+        // ============================================================
+            collection = "nari_dynamic_per_day"
+            filter = "{\"sourcemmsi\" : \"228364000\"}"
+            project = "{}"
+            query_text.innerHTML = "["+collection+"] : "+filter + "," + project
+            query_text_description.innerHTML = "Find all locations of mmsi 228364000 per date"
+            _query = "COLLECTION=" + collection  + 
+                    "&filter="+ filter + 
+                    "&project="+ project;
+            break;
+        case 3:
+        // ============================================================
+            collection = "nari_dynamic_per_day"
+            filter = "{\"date\" : \"2015-12-27\"}"
+            project = "{}"
+            query_text.innerHTML = "["+collection+"] : "+filter + "," + project
+            query_text_description.innerHTML = "Find all ship locations of date 2015-12-27"
+            _query = "COLLECTION=" + collection  + 
+                    "&filter="+ filter + 
+                    "&project="+ project;
+        case 4:
+        // ============================================================
+            collection = "nari_dynamic_per_day"
+            // {"location.coordinates":{$near:{$geometry:{type: "Point", coordinates: [-3.4032934,47.150867]},$maxDistance:10000}}}
+            filter = "{\"location.coordinates\":{\"\$near\":{\"\$geometry\":{\"type\": \"Point\", \"coordinates\": [-3.4032934,47.150867]},\"\$maxDistance\":10000}}}"
+            project = "{}"
+            query_text.innerHTML = "["+collection+"] : "+filter + "," + project
+            query_text_description.innerHTML = "Find all ship locations near to [-3.4032934,47.150867] with max Distance 10000"
+            _query = "COLLECTION=" + collection  + 
+                    "&filter="+ filter + 
+                    "&project="+ project;
+        default:
+
+        
+    }
+
+
+    url = "http://localhost:8080/api/query?" + _query;
+    fetch(url).then(response => response.json()).then(data => showResults(data));
+}
+
+
 
 function showResults(resultsObject) {
     const resultDiv = document.getElementById('result-div');

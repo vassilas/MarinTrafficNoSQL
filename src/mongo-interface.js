@@ -128,6 +128,138 @@ async function load_ANFR_Nari_Dynamic(){
 
 }
 
+async function load_ANFR_Nari_Dynamic_per_day(){
+    
+    
+
+    // this is the database
+    // ----------------------------------------------
+    const database = mongoClient.db(dbName);
+    console.debug("Created/opened database " + dbName);
+
+    // this is the collection
+    // ----------------------------------------------
+    collectionName="anfr_nari_dynamic_per_day"
+    const Collection = database.collection(collectionName);
+
+    // Drop collection in order to recreate it
+    // ----------------------------------------------
+    console.log("Drop collection ["+collectionName+"]");
+    await Collection.deleteMany({});
+
+    // Read the data from the tow collections and combine them
+    // ----------------------------------------------
+    all_anfr = await queryDatabaseX("anfr",filter={},project={'_id': 0});
+
+    // insert data to collection
+    // ----------------------------------------------
+    arrayToInsert = []
+    for(anfr in all_anfr){
+        
+        // Find all Nari_dynamic per mmsi
+        // ----------------------------------------------
+        nari_dynamic_per_mmsi = await queryDatabaseX("nari_dynamic",filter={sourcemmsi:all_anfr[anfr].mmsi},project={});
+
+        // Insert ANFR data
+        // ----------------------------------------------
+        doc_to_insert = all_anfr[anfr]
+        
+        doc_to_insert["nari_dynamic"] = []
+        list_of_dates = []
+        for(pos in nari_dynamic_per_mmsi){
+
+            if( !list_of_dates.includes(nari_dynamic_per_mmsi[pos].date) ){
+                doc_to_insert["nari_dynamic"].push(nari_dynamic_per_mmsi[pos])
+                list_of_dates.push(nari_dynamic_per_mmsi[pos].date)
+            }
+        }
+
+        arrayToInsert.push(doc_to_insert)
+
+    }
+
+    // INSERT data to collection 
+    // ----------------------------------------------
+    if(arrayToInsert.length != 0)
+        return await Collection.insertMany(arrayToInsert);
+
+}
+
+
+
+async function load_Nari_Dynamic_per_day(){
+    
+    
+
+    // this is the database
+    // ----------------------------------------------
+    const database = mongoClient.db(dbName);
+    console.debug("Created/opened database " + dbName);
+
+    // this is the collection
+    // ----------------------------------------------
+    collectionName="nari_dynamic_per_day"
+    const Collection = database.collection(collectionName);
+
+    // Drop collection in order to recreate it
+    // ----------------------------------------------
+    console.log("Drop collection ["+collectionName+"]");
+    await Collection.deleteMany({});
+
+    // Read the data from the tow collections and combine them
+    // ----------------------------------------------
+    all_nari_dynamic = await queryDatabaseX("nari_dynamic",filter={},project={'_id': 0});
+
+    // insert data to collection
+    // ----------------------------------------------
+    arrayToInsert = []
+    
+    mmsi_list = []
+    for(nari_dynamic in all_nari_dynamic){
+        
+        if( mmsi_list.includes(all_nari_dynamic[nari_dynamic].sourcemmsi))
+            continue;
+
+        dates_list = []
+
+        all_nari_dynamic_mmsi = await queryDatabaseX(
+            "nari_dynamic",
+            filter={'sourcemmsi':all_nari_dynamic[nari_dynamic].sourcemmsi},
+            project={'_id': 0});
+
+        for(nari_dynamic_mmsi in all_nari_dynamic_mmsi){
+            if( dates_list.includes(all_nari_dynamic_mmsi[nari_dynamic_mmsi].date))
+                continue;
+
+            let location = {
+                type: "Point",
+                coordinates: [
+                    parseFloat(all_nari_dynamic_mmsi[nari_dynamic_mmsi].lon),
+                    parseFloat(all_nari_dynamic_mmsi[nari_dynamic_mmsi].lat)
+                ]
+            };
+            
+            doc_to_insert = []
+            doc_to_insert = all_nari_dynamic_mmsi[nari_dynamic_mmsi]
+            doc_to_insert["location"] = location
+
+            // doc_to_insert = all_nari_dynamic_mmsi[nari_dynamic_mmsi]
+            arrayToInsert.push(doc_to_insert)
+            
+            dates_list.push(all_nari_dynamic_mmsi[nari_dynamic_mmsi].date)
+        }
+
+        mmsi_list.push(all_nari_dynamic[nari_dynamic].sourcemmsi)
+
+    }
+
+    // INSERT data to collection 
+    // ----------------------------------------------
+    if(arrayToInsert.length != 0)
+        return await Collection.insertMany(arrayToInsert);
+
+}
+
 
 async function queryDatabase(collectionName,query,command) {
     try {
@@ -140,7 +272,7 @@ async function queryDatabase(collectionName,query,command) {
 
         if(command == "FIND")
             return await Collection.find(query).toArray();
-        else if(command == "DISTINCT")
+        else if(command == "DISTINCT"){
             results = await Collection.find(query).toArray();
             // remove duplicate sourcemmsi rows
             filteredArr = await results.reduce((acc, current) => {
@@ -152,6 +284,7 @@ async function queryDatabase(collectionName,query,command) {
                 }
               }, []);
             return filteredArr;
+        }
     } catch (e) {
         console.log(e);
     } finally {
@@ -160,6 +293,34 @@ async function queryDatabase(collectionName,query,command) {
         // console.log("Disconnected from MongoDB")
     }
 }
+
+
+async function queryDatabaseX(collectionName,filter,project) {
+    try {
+
+        // console.log(JSON.stringify((filter,project), null, '    '));
+
+        // wait for MongoDB connection to disconnect
+        // await mongoClient.connect();
+        const database = mongoClient.db(dbName);
+        const Collection = database.collection(collectionName);
+
+  
+        return await Collection.find(
+            filter,
+            {projection: project}
+            ).toArray();
+
+    } catch (e) {
+        console.log(e);
+    } finally {
+        // always close connection to mongo client afterwards
+        // await mongoClient.close();
+        // console.log("Disconnected from MongoDB")
+    }
+}
+
+
 
 
 async function readAllCollectionData(query) {
@@ -203,4 +364,7 @@ exports.mongoDisconnect = mongoDisconnect;
 exports.loadCSV = loadCSV;
 exports.readAllCollectionData = readAllCollectionData;
 exports.queryDatabase = queryDatabase;
+exports.queryDatabaseX = queryDatabaseX;
 exports.load_ANFR_Nari_Dynamic = load_ANFR_Nari_Dynamic;
+exports.load_ANFR_Nari_Dynamic_per_day = load_ANFR_Nari_Dynamic_per_day;
+exports.load_Nari_Dynamic_per_day = load_Nari_Dynamic_per_day;
